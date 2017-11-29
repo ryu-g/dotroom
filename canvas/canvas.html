@@ -5,6 +5,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="./allonload.js"></script>
     <script src="./unitClass.js"></script>
+
+
     <style type="text/css">
       canvas { border: 1px solid #999; }
     </style>
@@ -30,5 +32,26 @@
     <p>d:move right</p>
     <p>s:move down</p>
     </div>
+        <script src="./socket.io/socket.io.js"></script>
+    <script>
+      $(function(){
+        var socket = io.connect();
+        $("#login").submit(function(e){
+          e.preventDefault();
+          socket.emit('login',($('#unitID').val(), $('#unitPassword').val()));
+        })
+        $("#signin").submit(function(e){
+          e.preventDefault();
+          socket.emit('signin',($('#unitName').val(),$('#unitPassword').val()));
+        })
+        socket.on('auth_from_server', function(data){
+          $('#login').append($('<h4>').text(data));
+        })
+         socket.on('authERR_from_server', function(data){
+          $('#login').append($('<h4>').text(data));
+        })
+       });
+    </script>
+
   </body>
 </html>

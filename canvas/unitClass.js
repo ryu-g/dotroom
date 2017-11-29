@@ -15,6 +15,7 @@ var Unit = function(name, id){
 Unit.prototype.getName = function(){
   return this.name;
 };
+
 Unit.prototype.getID = function() {
 	return this.id;
 };
@@ -36,7 +37,7 @@ Unit.prototype.moveLeft = function(usr) {
   console.log(usr.position); 
 };
 Unit.prototype.disp = function(x,y) {
-	canvas.img(x,y);//的な内容	
+  drawUnit(x,y);//的な内容	
 };
 
 amigo = new Unit('amigo', '0000000');

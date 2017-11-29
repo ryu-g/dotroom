@@ -19,21 +19,25 @@ function draw(){
 			var keyCode =e.keyCode;
 			switch(keyCode){
 				case 87:
+				case 38:
 				y-= increase;
 				drawUnit(x,y);
 				break;
 
 				case 65:
+				case 37:
 				x-= increase;
 				drawUnit(x,y);
 				break;
 
 				case 83:
+				case 40:
 				y+= increase;
 				drawUnit(x,y);
 				break;
 
 				case 68:
+				case 39:
 				x+= increase;
 				drawUnit(x,y);
 				break;

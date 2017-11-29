@@ -30,14 +30,16 @@ var http_server = new app.createServer(function(req, res) {
 console.log(`Server running at http://localhost:/${PORT}`);
 
 io.sockets.on('connection',function(socket){
-  socket.on('emit_from_client', function(data){
-    socket.client_name = data.name;
-    console.log('['+data.name+']:'+data.msg);
-    //emit:接続しているSocketのみにイベントを発信している
-    //on: "value", イベントを待っている
-    //接続しているSocket以外全部のときは
-    //socket.broadcast.emit
-    // io.sockets.emit
-    io.sockets.emit('emit_from_server','['+socket.client_name+']:' +data.msg)
+  socket.on('login', function(data){
+    socket.client_id = data.id;
+    socket.client_pw = data.pw;
+    console.log('login check unit ID: '+data.id+', unit pw: '+data.pw);
+    io.sockets.emit('auth_from_server','['+socket.client_name+']:' +data.msg)
+  });
+  socket.on('signin', function(data){
+    socket.client_id = data.name;
+    socket.client_id = data.pw;
+    console.log('unit ID: '+data.name+', unit name: '+data.pw);
+    io.sockets.emit('auth_from_server','['+socket.client_name+']:' +data.msg)
   });
 });
