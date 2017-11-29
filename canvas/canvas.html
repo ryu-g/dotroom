@@ -1,60 +1,34 @@
 <html>
   <head>
     <title>Canvas tutorial</title>
-    <script type="text/javascript">
-      function draw(){
-        var canvas = document.getElementById('tutorial');
-        if (canvas.getContext){
-          var ctx = canvas.getContext('2d');
-          var x=0;
-          var y=0;
-          const WIDTH = 400;
-          const HEIGHT = 300;
-
-          drawUnit(x,y);
-
-          document.onkeydown = function (e){
-          if(!e) e = window.event;
-            var keyCode =e.keyCode;
-            switch(keyCode){
-              case 87:
-              y-=5;
-              drawUnit(x,y);
-              break;
-
-              case 65:
-              x-=5;
-              drawUnit(x,y);
-              break;
-
-              case 83:
-              y+=5;
-              drawUnit(x,y);
-              break;
-
-              case 68:
-              x+=5;
-              drawUnit(x,y);
-              break;
-            }
-            console.log(x+","+y)
-          }
-      }
-      function drawUnit(x,y){
-      ctx.clearRect(0,0,400,300);
-      ctx.fillRect(x,y,20,20);
-      }
-    }
-    </script>
+    <script src="./canvas.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="./allonload.js"></script>
+    <script src="./unitClass.js"></script>
     <style type="text/css">
       canvas { border: 1px solid #999; }
     </style>
   </head>
-  <body onload="draw();">
-    <canvas id="tutorial" width="400" height="300"></canvas>
+  <body>
+    <form id= "login">
+      <h4>log in with your ID and password</h4>
+      <input type="text"  id="unitID" placeholder="type your id"> 
+      <input type="text"  id="unitPassword" placeholder="type your password">
+      <input type="submit" value="login">
+    </form>
+    <form id= "signin">
+      <h4>or descide your NAME and PASSWORD to sign in </h4>
+      <input type="text"  id="unitName" placeholder="type your unit name"> 
+      <input type="text"  id="unitPassword" placeholder="type your password">
+      <input type="submit" value="singin">
+    </form>
+   
+    <div onload="draw();"">
+    <canvas id="canvas" width="800" height="500"></canvas>
     <p>w:move up</p>
     <p>a:move left</p>
     <p>d:move right</p>
     <p>s:move down</p>
+    </div>
   </body>
 </html>

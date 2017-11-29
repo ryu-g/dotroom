@@ -5,31 +5,13 @@
   <meta charset="UTF-8">
   <title>socket.ioの練習</title>
 </head>
-<body>
+<body>    
   <form id= "myform">
     <input type="text"  id="name"> <input type="text"  id="msg"> <input type="submit" value="send!">
 
   </form>
-  <ul id="logs"></ul>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script></script>
   <script src="/socket.io/socket.io.js"></script>
-  <script>
-    var socket = io.connect();
-
-    $(function(){
-      $('#myform').submit(function(e){
-        e.preventDefault();
-        socket.json.emit('emit_from_client',{
-          msg:$('#msg').val(),
-          name:$('#name').val()
-        }
-          );
-        $('#msg').val('').focus();//#msg要素のvalueをからにしてフォーカスする
-      });
-      socket.on('emit_from_server',function(data){
-          $('#logs').append($('<li>').text(data));
-      })
-    });
-  </script>
+  <script src="socket.js"></script>
 </body>
 </html>

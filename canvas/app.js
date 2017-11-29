@@ -2,12 +2,24 @@ var app = require('http').createServer(handler),
     io  = require('socket.io').listen(app),
     fs  = require('fs'),
     PORT= 1337;
+var mime = {
+  ".html": "text/html",
+  ".css":  "text/css",
+  ".js":   "application/javascript"
 
+  // 読み取りたいMIMEタイプはここに追記
+};
 
 app.listen(1337);
 console.log(`Server running at http://localhost:/${PORT}`);
 function handler(req,res){
-  fs.readFile(__dirname + '/canvas.html', function(err, data){
+  if (req.url == '/') {
+    filePath = '/index.html';
+  } else {
+    filePath = req.url;
+  }
+  var fullpath = __dirname + '/canvas.html';
+  fs.readFile(fullpath, function(err, data){
     if(err){
       res.writeHead(500);
       log("end with error");
