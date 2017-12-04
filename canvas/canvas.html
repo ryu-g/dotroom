@@ -24,7 +24,7 @@
       <input type="submit" value="singin">
     </form>
    
-    <div onload="draw();"">
+    <div><!--  onload="draw();"> -->
     <canvas id="canvas" width="800" height="500"></canvas>
     <p>w:move up</p>
     <p>a:move left</p>
@@ -49,12 +49,20 @@
           });
         })
 
-        socket.on('auth_from_server', function(data){
+        socket.on('login_success_from_server', function(data){
+          $('#login').append($('<br>'));
+          $('#login').append($('<small>').text("welcome, "+data.name+". your id is "+data.id));
+          draw(data.name,data.id);
+        })
+        socket.on('login_failed_from_server', function(){
+          $('#login').append($('<br>'));
+          $('#login').append($('<small>').text("login failed. try again"));
+        })
+
+        socket.on('auth', function(data){//ログイン成功時の処理
           $('#login').append($('<h4>').text(data));
         })
-         socket.on('authERR_from_server', function(data){
-          $('#login').append($('<h4>').text(data));
-        })
+        
        });
     </script>
 

@@ -39,13 +39,43 @@ io.sockets.on('connection',function(socket){
   socket.on('emit_login', function(data){
     socket.client_id = data.unitId;
     socket.client_pw = data.unitPass;
-    console.log('login check unit ID: '+socket.client_id+', unit pass: '+socket.client_pw);
-    // io.sockets.emit('auth_from_server','['+socket.client_name+']:' +data.msg)
+    // console.log('login check unit ID: '+socket.client_id+', unit pass: '+socket.client_pw);
+    // console.log(login(socket.client_id, socket.client_pw));
+    usr = login(socket.client_id, socket.client_pw);
+    if(usr!=0){
+      io.sockets.emit('login_success_from_server',{id:usr[0],name:usr[1]} );
+      console.log('id:'+usr[0] + ", name:" + usr[1]+" >> login successed");
+    // io.sockets.emit('auth_from_server','['+socket.client_id+']:' +data.msg)
+    }else{
+      io.sockets.emit('login_failed_from_server',{value:"err"});
+      console.log("failed try again");
+    }
   });
-  socket.on('emit_signin', function(data){
-    socket.client_name = data.unitName;
-    socket.client_pw = data.unitPass;
-    console.log('unit ID: '+socket.client_name+', unit pass: '+socket.client_pw);
-    // io.sockets.emit('auth_from_server','['+socket.client_name+']:' +data.msg)
-  });
+  // socket.on('emit_signin', function(data){
+  //   socket.client_name = data.unitName;
+  //   socket.client_pw = data.unitPass;
+  //   console.log('unit ID: '+socket.client_name+', unit pass: '+socket.client_pw);
+  //   // io.sockets.emit('auth_from_server','['+socket.client_name+']:' +data.msg)
+  // });
 });
+
+login = function(id, password){
+
+  var data = JSON.parse(fs.readFileSync('./units.json', 'utf8'));
+  var len = data.length;
+  var target_id = id;
+  var target_pw = password;
+  var d = 1;
+  for(var i = 0; i < len; i++) {
+    console.log(data[i].id,data[i].pass);
+    if(target_id == data[i].id){
+      if(target_pw == data[i].pass){
+        d = Array(data[i].id, data[i].name);
+        // d = {"id": data[i].id, "name":data[i].name};
+        console.log(d);
+        return d;
+      }
+    }
+  }
+  return 0;
+}
