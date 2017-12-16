@@ -53,6 +53,6 @@ Unit.prototype.moveRoom = function(from,to) {
   setRoom
 };
 
-amigo = new Unit('amigo', '0000001', 'pass' );
+dummy = new Unit('dummy', '0000001', 'pass' );
 //unit[] = new Unit('unit_name', 'unit_id', 'unit_password' );
-console.log(amigo.getName());
+console.log(dummy.getName());

@@ -2,6 +2,7 @@ var app = require('http').createServer(handler);
 var fs  = require('fs');
 var path= require('path');
 var io  = require('socket.io').listen(app);
+var jsonfile = require('jsonfile');
 var PORT= 1337;
 var mime = {
   ".html": "text/html",
@@ -10,7 +11,7 @@ var mime = {
   // 読み取りたいMIMEタイプはここに追記
 };
 
-app.listen(1337);//seerverを待ち受け状態にするよ
+app.listen(1337);//serverを待ち受け状態にするよ
 console.log(`Server running at http://localhost:/${PORT}`);
 
 function handler(req,res){
@@ -36,32 +37,32 @@ function handler(req,res){
 
 //socketですよ
 io.sockets.on('connection',function(socket){
-  socket.on('emit_login', function(data){
+  socket.on('emit_login', function(data){//-----login kokokara-----
     socket.client_id = data.unitId;
     socket.client_pw = data.unitPass;
-    // console.log('login check unit ID: '+socket.client_id+', unit pass: '+socket.client_pw);
-    // console.log(login(socket.client_id, socket.client_pw));
-    usr = login(socket.client_id, socket.client_pw);
+    var usr = login(socket.client_id, socket.client_pw);
     if(usr!=0){
       io.sockets.emit('login_success_from_server',{id:usr[0],name:usr[1]} );
       console.log('id:'+usr[0] + ", name:" + usr[1]+" >> login successed");
-    // io.sockets.emit('auth_from_server','['+socket.client_id+']:' +data.msg)
     }else{
       io.sockets.emit('login_failed_from_server',{value:"err"});
       console.log("failed try again");
     }
+  });//login kokomade --------
+
+  socket.on('emit_signin', function(data){//sign in kokokara ---------
+    socket.client_name = data.unitName;
+    socket.client_pw = data.unitPass;
+    var chk = signin(socket.client_name,socket.client_pw);
+    if(chk==0){
+      io.socket.emit('signin_failed_from_server');
+    }
   });
-  // socket.on('emit_signin', function(data){
-  //   socket.client_name = data.unitName;
-  //   socket.client_pw = data.unitPass;
-  //   console.log('unit ID: '+socket.client_name+', unit pass: '+socket.client_pw);
-  //   // io.sockets.emit('auth_from_server','['+socket.client_name+']:' +data.msg)
-  // });
-});
+});//sign in kokomade --------
 
 login = function(id, password){
-
-  var data = JSON.parse(fs.readFileSync('./units.json', 'utf8'));
+  console.log("try to login with "+id+","+password);
+  var data = JSON.parse(fs.readFileSync('./units.json', 'utf8')||"null");
   var len = data.length;
   var target_id = id;
   var target_pw = password;
@@ -78,4 +79,45 @@ login = function(id, password){
     }
   }
   return 0;
+}
+signin = function(name,password){
+  var data = JSON.parse(fs.readFileSync('./units.json', 'utf8'));
+  var len = data.length;
+  var target_name = name;
+  var target_pw = password;
+  for(var i = 0; i < len; i++) {
+    if(target_name == data[i].name){
+      return 0;//already exist
+    }
+  }
+  addData("SAMPLE",target_name,target_pw,data);
+  save(data);
+  login("SAMPLE",target_pw);
+}
+
+
+function save(data){
+jsonfile.writeFile('./units.json', data, {
+    encoding: 'utf-8', 
+    replacer: null, 
+    spaces: 2
+}, function (err) {});
+}
+
+function addData(newid,newname,newpass,data){
+  var add = {
+         id : newid,
+         name : newname ,
+         pass : newpass 
+        }
+  data.push(add);
+}
+
+function removeData(ID,data){
+  var temp = data
+  var newData = temp.filter(function(item, index){
+    if (item.id != ID) return true;
+  });
+  temp = newData;
+  return temp;
 }

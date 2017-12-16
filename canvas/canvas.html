@@ -1,11 +1,13 @@
 <html>
   <head>
-    <title>Canvas tutorial</title>
+    <title>dotroom</title>
     <script src="./canvas.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="./allonload.js"></script>
     <script src="./unitClass.js"></script>
     <script src="./socket.io/socket.io.js"></script>
+    
+    <link rel="stylesheet" href="./sass/style.css">
     <style type="text/css">
       canvas { border: 1px solid #999; }
     </style>
@@ -14,22 +16,22 @@
     <form id= "login">
       <h4>log in with your ID and password</h4>
       <input type="text"  id="unitID" placeholder="type your id"> 
-      <input type="text"  id="unitPassword" placeholder="type your password">
+      <input type="text"  id="loginPassword" placeholder="type your password">
       <input type="submit" value="login">
     </form>
     <form id= "signin">
       <h4>or descide your NAME and PASSWORD to sign in </h4>
       <input type="text"  id="unitName" placeholder="type your unit name"> 
-      <input type="text"  id="unitPassword" placeholder="type your password">
+      <input type="text"  id="newPassword" placeholder="type your password">
       <input type="submit" value="singin">
     </form>
    
     <div><!--  onload="draw();"> -->
     <canvas id="canvas" width="800" height="500"></canvas>
-    <p>w:move up</p>
+<!--     <p>w:move up</p>
     <p>a:move left</p>
     <p>d:move right</p>
-    <p>s:move down</p>
+    <p>s:move down</p> -->
     </div>
     <script>
       $(function(){
@@ -38,15 +40,16 @@
           e.preventDefault();
           socket.json.emit('emit_login',{
             unitId:   $('#unitID').val(),
-            unitPass: $('#unitPassword').val()
+            unitPass: $('#loginPassword').val()
             });
         })
         $("#signin").submit(function(e){
           e.preventDefault();
           socket.json.emit('emit_signin',{
             unitName: $('#unitName').val(),
-            unitPass: $('#unitPassword').val()
+            unitPass: $('#newPassword').val()
           });
+          console.log("name: "+$('#unitName').val()+" pass: "+$('#newPassword').val());
         })
 
         socket.on('login_success_from_server', function(data){
@@ -59,12 +62,15 @@
           $('#login').append($('<small>').text("login failed. try again"));
         })
 
-        socket.on('auth', function(data){//ログイン成功時の処理
-          $('#login').append($('<h4>').text(data));
-        })
-        
+        socket.on('signin_failed_from_server', function(){
+          $('#signin').append($('<br>'));
+          $('#signin').append($('<small>').text("signin failed.that name is already exists."));
+        })//サインイン成功時はlogin処理に以降する。失敗時はメッセージ
+
+        // socket.emit('move', funciton(data){
+
+        // })
        });
     </script>
-
   </body>
 </html>

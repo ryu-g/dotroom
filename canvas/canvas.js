@@ -6,7 +6,7 @@ function draw(name,id){
 	function updatePosition(x,y){
 		x = you.position.x;
 		y = you.position.y;
-		console.log(x,y);
+		console.log("updated positonn:"+x,y);
 	}
 	function initUnit(x,y){
 		ctx.clearRect(0, 0, width, height);
@@ -30,6 +30,7 @@ function draw(name,id){
 		var y = you.position.y;
 		//----
 		initUnit(you.position.x,you.position.y);
+		drawUnit(you.position.x,you.position.y);
 		updatePosition(x,y);
 		document.onkeydown = function (e){
 			if(!e) e = window.event;
@@ -61,6 +62,4 @@ function draw(name,id){
 			}
 			// console.log(you.position.x+","+you.position.y);
 		}
-	}
-
-}
+	}}
