@@ -1,0 +1,27 @@
+[
+  {
+    "id":"a",
+    "name":"a",
+    "pass":"a"
+  },
+  {
+    "id":"ZZZZZZ",
+    "name":"ryu-g",
+    "pass":"pass"
+  },
+  {
+    "id":"XXXXXX",
+    "name":"sk",
+    "pass":"pass"
+  },
+  {
+    "id":"YYYYYY",
+    "name":"cha",
+    "pass":"pass"
+  },
+  {
+    "id":"SAMPLE",
+    "name":"aaaaa",
+    "pass":"aaaa"
+  }
+]

@@ -50,7 +50,7 @@ Unit.prototype.disp = function(x,y) {
   drawUnit(x,y);//的な内容	
 };
 Unit.prototype.moveRoom = function(from,to) {
-  setRoom
+  return 1;
 };
 
 dummy = new Unit('dummy', '0000001', 'pass' );

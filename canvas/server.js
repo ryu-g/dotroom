@@ -62,7 +62,7 @@ io.sockets.on('connection',function(socket){
 
 login = function(id, password){
   console.log("try to login with "+id+","+password);
-  var data = JSON.parse(fs.readFileSync('./units.json', 'utf8')||"null");
+  var data = JSON.parse(fs.readFileSync('./units.json', 'utf8'));
   var len = data.length;
   var target_id = id;
   var target_pw = password;
@@ -86,12 +86,13 @@ signin = function(name,password){
   var target_name = name;
   var target_pw = password;
   for(var i = 0; i < len; i++) {
+    console.log("chacking name...["+data[i].name+"]");//新規名前がすでに存在しているかどうかの確認
     if(target_name == data[i].name){
       return 0;//already exist
     }
   }
   addData("SAMPLE",target_name,target_pw,data);
-  save(data);
+  save(data);//ここのdataの形式あってる？
   login("SAMPLE",target_pw);
 }
 
