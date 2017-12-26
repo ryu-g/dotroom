@@ -4,12 +4,12 @@ var path= require('path');
 var io  = require('socket.io').listen(app);
 var jsonfile = require('jsonfile');
 var PORT= 1337;
-var mime = {
+var mime = {//ここの記載がないとクライアント側ブラウザがcssとかjsとかを読み込めなくなる
   ".html": "text/html",
   ".css":  "text/css",
   ".js":   "application/javascript"
-  // 読み取りたいMIMEタイプはここに追記
 };
+var data = JSON.parse(fs.readFileSync('./units.json', 'utf8'));
 
 app.listen(1337);//serverを待ち受け状態にするよ
 console.log(`Server running at http://localhost:/${PORT}`);
@@ -50,38 +50,41 @@ io.sockets.on('connection',function(socket){
     }
   });//login kokomade --------
 
-  socket.on('emit_signin', function(data){//sign in kokokara ---------
+  socket.on('emit_signup', function(data){//sign in kokokara ---------
     socket.client_name = data.unitName;
     socket.client_pw = data.unitPass;
-    var chk = signin(socket.client_name,socket.client_pw);
-    if(chk==0){
-      io.socket.emit('signin_failed_from_server');
+    var chk = signup(socket.client_name,socket.client_pw);
+    if(chk!=0){
+      io.sockets.emit('login_success_from_server',{id:chk[0],name:chk[1]});
+    }else{
+      io.sockets.emit('signup_failed_from_server',{value:"err"});
+      console.log("failed try again");
     }
   });
 });//sign in kokomade --------
 
 login = function(id, password){
   console.log("try to login with "+id+","+password);
-  var data = JSON.parse(fs.readFileSync('./units.json', 'utf8'));
+  // var data = JSON.parse(fs.readFileSync('./units.json', 'utf8'));
   var len = data.length;
   var target_id = id;
   var target_pw = password;
-  var d = 1;
+  var d = 3;
   for(var i = 0; i < len; i++) {
     console.log(data[i].id,data[i].pass);
     if(target_id == data[i].id){
       if(target_pw == data[i].pass){
         d = Array(data[i].id, data[i].name);
         // d = {"id": data[i].id, "name":data[i].name};
-        console.log(d);
+        console.log("returned:"+d);
         return d;
       }
     }
   }
   return 0;
 }
-signin = function(name,password){
-  var data = JSON.parse(fs.readFileSync('./units.json', 'utf8'));
+signup = function(name,password){
+  // var data = JSON.parse(fs.readFileSync('./units.json', 'utf8'));
   var len = data.length;
   var target_name = name;
   var target_pw = password;
@@ -92,8 +95,9 @@ signin = function(name,password){
     }
   }
   addData("SAMPLE",target_name,target_pw,data);
+  console.log("new id and password is :"+target_name,target_pw,data);
   save(data);//ここのdataの形式あってる？
-  login("SAMPLE",target_pw);
+  return login("SAMPLE",target_pw);
 }
 
 

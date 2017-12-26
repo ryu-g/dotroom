@@ -19,11 +19,11 @@
       <input type="text"  id="loginPassword" placeholder="type your password">
       <input type="submit" value="login">
     </form>
-    <form id= "signin">
-      <h4>or descide your NAME and PASSWORD to sign in </h4>
+    <form id= "signup">
+      <h4>or descide your NAME and PASSWORD to sign up </h4>
       <input type="text"  id="unitName" placeholder="type your unit name"> 
       <input type="text"  id="newPassword" placeholder="type your password">
-      <input type="submit" value="singin">
+      <input type="submit" value="signup">
     </form>
    
     <div><!--  onload="draw();"> -->
@@ -43,9 +43,9 @@
             unitPass: $('#loginPassword').val()
             });
         })
-        $("#signin").submit(function(e){
+        $("#signup").submit(function(e){
           e.preventDefault();
-          socket.json.emit('emit_signin',{
+          socket.json.emit('emit_signup',{
             unitName: $('#unitName').val(),
             unitPass: $('#newPassword').val()
           });
@@ -62,9 +62,15 @@
           $('#login').append($('<small>').text("login failed. try again"));
         })
 
-        socket.on('signin_failed_from_server', function(){
-          $('#signin').append($('<br>'));
-          $('#signin').append($('<small>').text("signin failed.that name is already exists."));
+        socket.on('signup_failed_from_server', function(){
+          $('#signup').append($('<br>'));
+          $('#signup').append($('<small>').text("signup failed.that name is already exists."));
+        })//サインイン成功時はlogin処理に以降する。失敗時はメッセージ
+
+        socket.on('signup_successed_from_server', function(){
+          $('#signup').append($('<br>'));
+          $('#signup').append($('<small>').text("signup success! your name is "+data.id+",password is "+data.pass));
+          console.log("hello");
         })//サインイン成功時はlogin処理に以降する。失敗時はメッセージ
 
         // socket.emit('move', funciton(data){
